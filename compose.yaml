@@ -1,0 +1,21 @@
+name: deepseek-qq-bot
+
+services:
+  napcat:
+    image: mlikiowa/napcat-docker:latest
+    container_name: napcat
+    restart: unless-stopped
+    environment:
+      MODE: ws
+      WEBUI_TOKEN: ${WEBUI_TOKEN:?请在 .env 中设置 WEBUI_TOKEN}
+      NAPCAT_UID: ${NAPCAT_UID:-1000}
+      NAPCAT_GID: ${NAPCAT_GID:-1000}
+      TZ: Asia/Shanghai
+    ports:
+      # 只监听本机，公网无法直接访问
+      - "127.0.0.1:6099:6099"   # NapCat WebUI
+      - "127.0.0.1:3001:3001"   # OneBot v11 正向 WebSocket
+    volumes:
+      - ./data/napcat/qq:/app/.config/QQ
+      - ./data/napcat/config:/app/napcat/config
+      - ./data/napcat/plugins:/app/napcat/plugins
